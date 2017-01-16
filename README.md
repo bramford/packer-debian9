@@ -1,28 +1,33 @@
-Packer templates for Debian 9 (stretch)
---------------------------------------
-
-## Overview
-
-Fully automated installation of debian9; powered by Packer, Debian Preseed and Ansible
+Packer Templates: Debian 9 (jessie)
+-----------------------------------
+ 
+Fully automated installation of debain 9, powered by:
 
 - [Packer](https://www.packer.io/intro/index.html)
 - [Ansible](http://docs.ansible.com/ansible/index.html)
 - [Debian Preseed](https://wiki.debian.org/DebianInstaller/Preseed)
 
-### Dependencies
+## Dependencies
+ 
+ - Packer [0.10.2+](https://releases.hashicorp.com/packer/)
 
-- Packer 0.10.2+ (from https://www.packer.io/downloads.html)
+## Key Features
 
-## qemu-kvm
+- Partitioning with LVM
+- Enables persistent network names
+- Enables serial console
+- Uses ansible for provisioning
+ 
+# qemu-kvm
 
-### Install Dependencies
+## Install Host Dependencies
 
     apt-get install qemu-kvm
 
-### Build
+## Build
+ 
+    packer build packer-debain9-qemu-kvm.json -var 'local_domain=lan.mydomain.com'
 
-    packer build packer-debian9-qemu-kvm.json -var 'local_domain=lan.mydomain.com'
+## Output
 
-### Output
-
-Resulting image will be stored in `./output/`.
+Output directory defaults to `./output/`, configurable with `-var 'output_parent_dir=/path'`
