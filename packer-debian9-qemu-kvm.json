@@ -1,0 +1,95 @@
+{
+  "variables": {
+    "ansible_roles_path": "./ansible/roles",
+    "build_id": "{{isotime \"20060102150405\"}}",
+    "build_name": "packer-debian9-qemu-kvm",
+    "disk_size": "10240",
+    "iso_checksum": "249e83a56a0da824626f59c44c761fa28b7889972a9fc3ae3713a9eae3d6d3f9c775c63cf8b8ad3cd973f7c3317942fbc12247a1abe9ecefe04ab5fa6242f41e",
+    "iso_checksum_type": "sha512",
+    "iso_name": "debian-testing-amd64-netinst.iso",
+    "local_domain": "lan.mydomain.com",
+    "local_mirror_url": "http://localhost",
+    "output_dir": "output",
+    "remote_mirror_url": "http://cdimage.debian.org/cdimage/weekly-builds/amd64/iso-cd/"
+  },
+
+  "builders": [
+    {
+      "accelerator": "kvm",
+      "boot_command": [
+        "<esc><wait>",
+        "auto <wait>",
+        "console-keymaps-at/keymap=us <wait>",
+        "console-setup/ask_detect=false <wait>",
+        "debconf/frontend=noninteractive <wait>",
+        "debian-installer=en_US <wait>",
+        "fb=false <wait>",
+        "install <wait>",
+        "kbd-chooser/method=us <wait>",
+        "keyboard-configuration/xkb-keymap=us <wait>",
+        "locale=en_US <wait>",
+        "netcfg/get_domain={{ user `local_domain` }} <wait>",
+        "netcfg/get_hostname={{ .Name }} <wait>",
+        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg <wait>",
+        "<enter><wait>"
+      ],
+      "boot_wait": "5s",
+      "disk_size": "{{ user `disk_size` }}",
+      "format": "qcow2",
+      "headless": true,
+      "http_directory": "http",
+      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
+      "iso_urls": [
+        "{{ user `local_mirror_url` }}/{{ user `iso_name` }}",
+        "{{ user `remote_mirror_url` }}/{{ user `iso_name` }}"
+      ],
+      "output_directory": "{{ user `output_dir` }}/{{ user `build_name` }}-qemu-{{ user `build_id` }}",
+      "qemuargs": [
+          [ "-m", "1024M" ]
+      ],
+      "shutdown_command": "sudo /sbin/halt -h -p",
+      "ssh_password": "root",
+      "ssh_port": 22,
+      "ssh_username": "root",
+      "ssh_wait_timeout": "1800s",
+      "type": "qemu",
+      "vm_name": "{{ user `build_name` }}-{{ user `build_id` }}"
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "{{.Vars}} bash '{{.Path}}'",
+      "inline": [
+        "sleep 30",
+        "apt-get -y update",
+        "DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" dist-upgrade",
+        "apt-get -y install build-essential python-dev python-pip libffi-dev libssl-dev libxml2-dev libxslt1-dev zlib1g-dev",
+        "apt-get -y --purge remove python-cffi",
+        "pip install ansible==2.2.0"
+        ]
+    },
+    {
+      "type": "ansible-local",
+      "playbook_dir": "ansible",
+      "playbook_file": "ansible/playbook.yml",
+      "role_paths": [
+        "{{ user `ansible_roles_path` }}/apt-sources",
+        "{{ user `ansible_roles_path` }}/serial-console"
+      ]
+    },
+    {
+      "type": "shell",
+      "execute_command": "{{.Vars}} bash '{{.Path}}'",
+      "inline": [
+        "pip uninstall -y ansible httplib2 Jinja2 paramiko PyYAML six",
+        "apt-get -y purge python-dev python-pip libffi-dev libssl-dev libxml2-dev libxslt1-dev zlib1g-dev",
+        "apt-get -y autoremove --purge",
+        "apt-get -y clean",
+        "rm -rf /tmp ; mkdir /tmp ; chmod 1777 /tmp"
+      ]
+    }
+  ]
+}

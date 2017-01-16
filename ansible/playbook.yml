@@ -1,0 +1,66 @@
+---
+- hosts: all
+  pre_tasks:
+    - name: Replace default shell symlink (dash) with bash
+      file:
+        src: /bin/bash
+        path: /bin/sh
+        state: link
+      become: yes
+  roles:
+    - { role: serial-console }
+  tasks:
+    - name: Install packages
+      package:
+        name: "{{ item }}"
+        state: present
+      become: yes
+      with_items:
+        - acpi
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - dbus
+        - dnsutils
+        - gdisk
+        - htop
+        - iftop
+        - iotop
+        - lsof
+        - netcat-openbsd
+        - ntp
+        - parted
+        - psmisc
+        - rsync
+        - smartmontools
+        - systemd
+        - tcpdump
+        - vim-nox
+        - wget
+  post_tasks:
+    - name: Set default editor to vim-nox
+      alternatives:
+        name: editor
+        path: "/usr/bin/vim.nox"
+      become: yes
+
+    - name: Configure eth0 in network interfaces
+      replace:
+        dest: "/etc/network/interfaces"
+        regexp: '(?:(?:eno|ens|enp)\w+)'
+        replace: 'eth0'
+      become: yes
+
+    - name: Configure grub to disable persistent network names
+      replace:
+        dest: "/etc/default/grub"
+        regexp: '(^\s*GRUB_CMDLINE_LINUX="\s*.*?)(?:\s*net\.ifnames\=[0-9]\s*)*(.*"*$)'
+        replace: '\1net.ifnames=0 \2'
+      become: yes
+      register: disable_persistent_network_names
+
+    - name: Update grub
+      shell: update-grub
+      become: yes
+      when: disable_persistent_network_names.changed == True
+      tags: ["skip_ansible_lint"]
