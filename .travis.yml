@@ -4,6 +4,7 @@ python: "2.7"
 
 # Use the new container infrastructure
 sudo: false
+dist: trusty
 
 # Install ansible
 addons:
@@ -11,18 +12,18 @@ addons:
     packages:
     - python-pip
     - wget
+    - unzip
 
 install:
+  # Install packer
+  - wget https://releases.hashicorp.com/packer/0.12.1/packer_0.12.1_linux_amd64.zip && unzip packer_0.12.1_linux_amd64.zip
+
   # Install ansible and ansible-lint
   - pip install ansible
   - pip install ansible-lint
 
-  # Check ansible version
+  # Print ansible version
   - ansible --version
-
-  # Install packer
-  - wget --secure-protocol=TLSv1_2 https://releases.hashicorp.com/packer/0.12.1/packer_0.12.1_linux_amd64.zip -O packer.zip && unzip packer.zip
-  - ./packer --version
 
   # Create ansible.cfg with correct roles_path
   - printf '[defaults]\nroles_path=ansible/roles' > ansible/ansible.cfg

@@ -1,5 +1,7 @@
 Packer Templates: Debian 9 (jessie)
 -----------------------------------
+
+[![Build Status](https://travis-ci.org/bramford/packer-debian9.svg?branch=master)](https://travis-ci.org/bramford/packer-debian9)
  
 Fully automated installation of debain 9, powered by:
 
