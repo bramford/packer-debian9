@@ -32,4 +32,4 @@ Fully automated installation of debain 9, powered by:
 
 ## Output
 
-Output directory defaults to `./output/`, configurable with `-var 'output_parent_dir=/path'`
+Output directory defaults to `./output/`, configurable with `-var 'output_dir=/path/to/dir'`
