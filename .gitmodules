@@ -1,6 +1,6 @@
 [submodule "ansible/roles/serial-console"]
 	path = ansible/roles/serial-console
-	url = git@github.com:bramford/ansible-role-serial-console.git
+	url = https://github.com/bramford/ansible-role-serial-console.git
 [submodule "ansible/roles/apt-sources"]
 	path = ansible/roles/apt-sources
-	url = git@github.com:bramford/ansible-role-apt-sources.git
+	url = https://github.com/bramford/ansible-role-apt-sources.git
