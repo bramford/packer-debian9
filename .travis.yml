@@ -13,6 +13,7 @@ addons:
     - python-pip
     - wget
     - unzip
+    - jq
 
 install:
   # Install packer
@@ -29,6 +30,15 @@ install:
   - printf '[defaults]\nroles_path=ansible/roles' > ansible/ansible.cfg
 
 script:
+  # Download and checksum installer iso
+  - >
+    iso_checksum=$(jq --raw-output '.variables.iso_checksum' packer-debian9-qemu-kvm.json)
+    && iso_checksum_type="$(jq --raw-output '.variables.iso_checksum_type' packer-debian9-qemu-kvm.json)"
+    && iso_file_url="$(jq --raw-output '.variables.remote_mirror_url' packer-debian9-qemu-kvm.json)"
+    && iso_file_name="$(jq --raw-output '.variables.iso_name' packer-debian9-qemu-kvm.json)"
+    && wget "${iso_file_url}/${iso_file_name}"
+    && ${iso_checksum_type}sum ${iso_file_name} | grep ${iso_checksum}
+
   # Validate packer template
   - ./packer validate packer-debian9-qemu-kvm.json
 
