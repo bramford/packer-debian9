@@ -3,7 +3,7 @@ Packer Templates: Debian 9 (jessie)
 
 [![Build Status](https://travis-ci.org/bramford/packer-debian9.svg?branch=master)](https://travis-ci.org/bramford/packer-debian9)
  
-Fully automated installation of debain 9, powered by:
+Fully automated installation of debian 9, powered by:
 
 - [Packer](https://www.packer.io/intro/index.html)
 - [Ansible](http://docs.ansible.com/ansible/index.html)
@@ -24,12 +24,18 @@ Fully automated installation of debain 9, powered by:
 
 ## Install Host Dependencies
 
+### Debian/Ubuntu
+
     apt-get install qemu-kvm
+
+### RHEL/CentOS
+
+    yum install qemu-kvm
 
 ## Build
  
-    packer build packer-debain9-qemu-kvm.json -var 'local_domain=lan.mydomain.com'
-
+    packer build packer-debian9-qemu-kvm.json
+ 
 ## Output
-
+ 
 Output directory defaults to `./output/`, configurable with `-var 'output_dir=/path/to/dir'`
