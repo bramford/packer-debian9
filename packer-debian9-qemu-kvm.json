@@ -4,7 +4,7 @@
     "build_id": "{{isotime \"20060102150405\"}}",
     "build_name": "packer-debian9-qemu-kvm",
     "disk_size": "10240",
-    "iso_checksum": "8a4256d056fc7933267a0f013e66d80193cbd9b848dc3aa7531702bd5a76b849274cb39c1f427c0f74fc7e226c2ec9c8ec237be02f4cd3e5c4da92be46dedd65",
+    "iso_checksum": "fd9adcaa673b396947f0a23a6c2bac79369241808ede405f7129a984addc55f0b286c4a8aa836307cae18fc21af407acb287d7a651cd7ccb65463fa8ca33f667",
     "iso_checksum_type": "sha512",
     "iso_name": "debian-testing-amd64-netinst.iso",
     "local_domain": "lan.mydomain.com",
