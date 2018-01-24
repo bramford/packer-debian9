@@ -1,12 +1,5 @@
 ---
 - hosts: all
-  pre_tasks:
-    - name: Replace default shell symlink (dash) with bash
-      file:
-        src: /bin/bash
-        path: /bin/sh
-        state: link
-      become: yes
   roles:
     - { role: serial-console }
   tasks:
