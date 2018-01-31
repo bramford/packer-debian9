@@ -10,7 +10,7 @@ BUILD_REF - Reference to use when tagging/naming build artifacts - Default: Curr
 
 ec2ami:
 
-AMI_REGIONS - AWS regions to which the AMIs should be copied - Default: none
+AMI_REGIONS - Comma-separated list of AWS regions to which the output AMI will be copied. Example: 'us-west-1,us-east-2' - Default: none
 AWS_ACCESS_KEY_ID - AWS access key - Required
 AWS_REGION - AWS region - Required
 AWS_SECRET_ACCESS_KEY - AWS secret key

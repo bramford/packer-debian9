@@ -18,6 +18,7 @@
     {
       "access_key": "{{user `aws_access_key`}}",
       "ami_name": "{{ user `build_name` }}_{{ user `build_ref` }}_{{ user `build_id` }}",
+      "ami_regions": "{{ user `ami_regions` }}",
       "associate_public_ip_address": true,
       "instance_type": "t2.medium",
       "region": "{{ user `aws_region` }}",
