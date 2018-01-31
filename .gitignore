@@ -1,2 +1,3 @@
 packer_cache/
 output/*
+ec2_amazon-ebs.pem
