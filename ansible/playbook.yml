@@ -1,9 +1,11 @@
 ---
 - hosts: all
   roles:
-    - { role: serial-console }
-  tasks:
-    - name: Install packages
+    - { role: serial-console,
+        when: not ec2ami|bool }
+
+  pre_tasks:
+    - name: Install misc packages
       package:
         name: "{{ item }}"
         state: present
@@ -28,32 +30,10 @@
         - smartmontools
         - systemd
         - tcpdump
-        - vim-nox
         - wget
-  post_tasks:
-    - name: Set default editor to vim-nox
-      alternatives:
-        name: editor
-        path: "/usr/bin/vim.nox"
-      become: yes
 
-    - name: Configure eth0 in network interfaces
-      replace:
-        dest: "/etc/network/interfaces"
-        regexp: '(?:(?:eno|ens|enp)\w+)'
-        replace: 'eth0'
-      become: yes
+    - include: tasks/disable-persistent-network-names.yml
+      when: not ec2ami|bool
 
-    - name: Configure grub to disable persistent network names
-      replace:
-        dest: "/etc/default/grub"
-        regexp: '(^\s*GRUB_CMDLINE_LINUX="\s*.*?)(?:\s*net\.ifnames\=[0-9]\s*)*(.*"*$)'
-        replace: '\1net.ifnames=0 \2'
-      become: yes
-      register: disable_persistent_network_names
-
-    - name: Update grub
-      shell: update-grub
-      become: yes
-      when: disable_persistent_network_names.changed == True
-      tags: ["skip_ansible_lint"]
+    - include: tasks/default-editor-vim-nox.yml
+      when: not ec2ami|bool

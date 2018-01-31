@@ -2,6 +2,7 @@
   "variables": {
     "ansible_roles_path": "./ansible/roles",
     "build_id": "{{isotime \"20060102150405\"}}",
+    "build_ref": "{{env `BUILD_REF`}}",
     "build_name": "packer-debian9-qemu-kvm",
     "disk_size": "10240",
     "iso_checksum": "8775231d6f56a3d8f116eb64fe048f5cbd2ea0f8c092a1cb7608bcb4106f9c85cb69ce68f53bd381019ab40f1c0316843036daf3fd9107c81c58a240334cc747",
@@ -10,6 +11,7 @@
     "local_domain": "lan.mydomain.com",
     "local_mirror_url": "http://localhost",
     "output_dir": "output",
+    "dynamic_mirror_url": "http://debian-cd.debian.net/debian-cd/9.3.0/amd64/iso-cd",
     "remote_mirror_url": "https://cdimage.debian.org/debian-cd/9.3.0/amd64/iso-cd"
   },
 
@@ -42,6 +44,7 @@
       "iso_checksum_type": "{{ user `iso_checksum_type` }}",
       "iso_urls": [
         "{{ user `local_mirror_url` }}/{{ user `iso_name` }}",
+        "{{ user `dynamic_mirror_url` }}/{{ user `iso_name` }}",
         "{{ user `remote_mirror_url` }}/{{ user `iso_name` }}"
       ],
       "output_directory": "{{ user `output_dir` }}/{{ user `build_name` }}-qemu-{{ user `build_id` }}",
@@ -54,7 +57,7 @@
       "ssh_username": "root",
       "ssh_wait_timeout": "1800s",
       "type": "qemu",
-      "vm_name": "{{ user `build_name` }}-{{ user `build_id` }}"
+      "vm_name": "{{ user `build_name` }}-{{ user `build_ref` }}-{{ user `build_id` }}"
     }
   ],
 
@@ -63,20 +66,23 @@
       "type": "shell",
       "execute_command": "{{.Vars}} bash '{{.Path}}'",
       "inline": [
-        "sleep 30",
-        "apt-get -y update",
+        "sleep 15",
+        "DEBIAN_FRONTEND=noninteractive apt-get -y update",
         "DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" dist-upgrade",
-        "apt-get -y install build-essential python-dev python-pip libffi-dev libssl-dev libxml2-dev libxslt1-dev zlib1g-dev",
-        "apt-get -y --purge remove python-cffi",
-        "pip install ansible==2.2.0"
+        "DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" install build-essential python-dev libffi-dev libssl-dev libxml2-dev libxslt1-dev zlib1g-dev",
+        "DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" --purge remove python-cffi",
+        "wget https://bootstrap.pypa.io/get-pip.py -O /usr/local/bin/get-pip.py",
+        "chmod +x /usr/local/bin/get-pip.py",
+        "python /usr/local/bin/get-pip.py",
+        "pip install ansible==2.4.2"
         ]
     },
     {
       "type": "ansible-local",
+      "group_vars": "ansible/inventory/group_vars",
       "playbook_dir": "ansible",
       "playbook_file": "ansible/playbook.yml",
       "role_paths": [
-        "{{ user `ansible_roles_path` }}/apt-sources",
         "{{ user `ansible_roles_path` }}/serial-console"
       ]
     },

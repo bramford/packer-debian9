@@ -1,0 +1,20 @@
+---
+- name: Configure eth0 in network interfaces
+  replace:
+    dest: "/etc/network/interfaces"
+    regexp: '(?:(?:eno|ens|enp)\w+)'
+    replace: 'eth0'
+  become: yes
+
+- name: Configure grub to disable persistent network names
+  replace:
+    dest: "/etc/default/grub"
+    regexp: '(^\s*GRUB_CMDLINE_LINUX="\s*.*?)(?:\s*net\.ifnames\=[0-9]\s*)*(.*"*$)'
+    replace: '\1net.ifnames=0 \2'
+  become: yes
+  register: configure_grub_disable_persistent_network_names
+
+- name: Update grub
+  shell: update-grub
+  become: yes
+  when: configure_grub_disable_persistent_network_names.changed

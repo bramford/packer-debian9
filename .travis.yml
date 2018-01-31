@@ -17,11 +17,12 @@ addons:
 
 install:
   # Install packer
-  - wget https://releases.hashicorp.com/packer/0.12.1/packer_0.12.1_linux_amd64.zip && unzip packer_0.12.1_linux_amd64.zip
+  - wget https://releases.hashicorp.com/packer/1.0.3/packer_1.0.3_linux_amd64.zip && unzip packer_1.0.3_linux_amd64.zip
 
   # Install ansible and ansible-lint
   - pip install ansible
   - pip install ansible-lint
+  - pip install awscli
 
   # Print ansible version
   - ansible --version
@@ -34,13 +35,14 @@ script:
   - >
     iso_checksum=$(jq --raw-output '.variables.iso_checksum' packer-debian9-qemu-kvm.json)
     && iso_checksum_type="$(jq --raw-output '.variables.iso_checksum_type' packer-debian9-qemu-kvm.json)"
-    && iso_file_url="$(jq --raw-output '.variables.remote_mirror_url' packer-debian9-qemu-kvm.json)"
+    && iso_file_url="$(jq --raw-output '.variables.dynamic_mirror_url' packer-debian9-qemu-kvm.json)"
     && iso_file_name="$(jq --raw-output '.variables.iso_name' packer-debian9-qemu-kvm.json)"
     && wget "${iso_file_url}/${iso_file_name}"
     && ${iso_checksum_type}sum ${iso_file_name} | grep ${iso_checksum}
 
-  # Validate packer template
-  - ./packer validate packer-debian9-qemu-kvm.json
+  # Validate templates
+  - packer validate -var 'source_ami=ami-628ad918' ./packer-debian9-ec2ami.json
+  - packer validate ./packer-debian9-qemu-kvm.json
 
   # Syntax check ansible playbook
   - ansible-playbook -vvvv ansible/playbook.yml -i 'localhost,' --syntax-check
