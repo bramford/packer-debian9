@@ -37,7 +37,7 @@ if [[ $1 == "ec2ami" ]] ; then
         which aws > /dev/null || { echo "ERROR: 'aws' executable not found. Set SOURCE_AMI or install 'awscli' to AMI auto-discovery"; exit 1; }
         export SOURCE_AMI=$(aws --region $AWS_REGION ec2 describe-images --filters "Name=owner-id,Values=379101102735" "Name=root-device-type,Values=ebs" "Name=architecture,Values=x86_64" "Name=state,Values=available" | jq --raw-output '.Images | sort_by(.Name) | .[] | select(.Name | test("^debian-stretch-hvm-x86_64-gp2.*")) | .ImageId' | tail -n 1)
     fi
-    aws --region $AWS_REGION ec2 describe-images --image-ids $SOURCE_AMI > /dev/null ||  { echo "ERROR: SOURCE_AMI is not available"; exit 1; }
+    aws --region $AWS_REGION ec2 describe-images --image-ids $SOURCE_AMI > /dev/null || { echo "ERROR: SOURCE_AMI is not available"; exit 1; }
     shift 1
     packer build $@ ./packer-debian9-ec2ami.json
 elif [[ $1 == "qemu-kvm" ]] ; then
