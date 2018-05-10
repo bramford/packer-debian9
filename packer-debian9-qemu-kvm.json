@@ -2,16 +2,14 @@
   "variables": {
     "ansible_roles_path": "./ansible/roles",
     "build_id": "{{isotime \"20060102150405\"}}",
-    "build_ref": "{{env `BUILD_REF`}}",
     "build_name": "packer-debian9-qemu-kvm",
     "disk_size": "10240",
     "iso_checksum": "345c4e674dc10476e8c4f1571fbcdba4ce9788aa5584c5e2590ab3e89e7bb9acb370536f41a3ac740eb92b6aebe3cb8eb9734874dd1658c68875981b8351bc38",
     "iso_checksum_type": "sha512",
     "iso_name": "debian-9.4.0-amd64-netinst.iso",
-    "local_domain": "lan.mydomain.com",
-    "local_mirror_url": "http://localhost",
+    "local_domain": "local.lan",
     "output_dir": "output",
-    "dynamic_mirror_url": "http://debian-cd.debian.net/debian-cd/9.4.0/amd64/iso-cd",
+    "dynamic_mirror_url": "/Users/yurilevin/Downloads",
     "remote_mirror_url": "https://cdimage.debian.org/debian-cd/9.4.0/amd64/iso-cd"
   },
 
@@ -37,13 +35,14 @@
       ],
       "boot_wait": "5s",
       "disk_size": "{{ user `disk_size` }}",
-      "format": "qcow2",
-      "headless": true,
+      "format": "raw",
+      "headless": false,
       "http_directory": "http",
       "iso_checksum": "{{ user `iso_checksum` }}",
       "iso_checksum_type": "{{ user `iso_checksum_type` }}",
+      "disk_interface": "virtio-scsi",
+      "disk_cache": "none",
       "iso_urls": [
-        "{{ user `local_mirror_url` }}/{{ user `iso_name` }}",
         "{{ user `dynamic_mirror_url` }}/{{ user `iso_name` }}",
         "{{ user `remote_mirror_url` }}/{{ user `iso_name` }}"
       ],
@@ -57,7 +56,7 @@
       "ssh_username": "root",
       "ssh_wait_timeout": "1800s",
       "type": "qemu",
-      "vm_name": "{{ user `build_name` }}-{{ user `build_ref` }}-{{ user `build_id` }}"
+      "vm_name": "{{ user `build_name` }}-{{ user `build_id` }}"
     }
   ],
 
