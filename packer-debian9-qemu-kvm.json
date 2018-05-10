@@ -9,7 +9,7 @@
     "iso_name": "debian-9.4.0-amd64-netinst.iso",
     "local_domain": "local.lan",
     "output_dir": "output",
-    "dynamic_mirror_url": "/Users/yurilevin/Downloads",
+    "dynamic_mirror_url": "./iso",
     "remote_mirror_url": "https://cdimage.debian.org/debian-cd/9.4.0/amd64/iso-cd"
   },
 
