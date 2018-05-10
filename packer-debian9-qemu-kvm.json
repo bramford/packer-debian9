@@ -36,7 +36,7 @@
       "boot_wait": "5s",
       "disk_size": "{{ user `disk_size` }}",
       "format": "raw",
-      "headless": false,
+      "headless": true,
       "http_directory": "http",
       "iso_checksum": "{{ user `iso_checksum` }}",
       "iso_checksum_type": "{{ user `iso_checksum_type` }}",
