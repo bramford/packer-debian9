@@ -32,8 +32,8 @@
         - tcpdump
         - wget
 
-    - include: tasks/disable-persistent-network-names.yml
+    - include_tasks: tasks/disable-persistent-network-names.yml
       when: not ec2ami|bool
 
-    - include: tasks/default-editor-vim-nox.yml
+    - include_tasks: tasks/default-editor-vim-nox.yml
       when: not ec2ami|bool
