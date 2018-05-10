@@ -42,6 +42,7 @@ if [[ $1 == "ec2ami" ]] ; then
     packer build $@ ./packer-debian9-ec2ami.json
 elif [[ $1 == "qemu-kvm" ]] ; then
     shift 1
+    export PACKER_LOG=1
     packer build $@ ./packer-debian9-qemu-kvm.json
 else
     usage
