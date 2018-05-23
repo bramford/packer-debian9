@@ -92,6 +92,9 @@
       "inline": [
         "pip uninstall -y ansible httplib2 Jinja2 paramiko PyYAML six",
         "apt-get -y purge python-dev python-pip libffi-dev libssl-dev libxml2-dev libxslt1-dev zlib1g-dev",
+        "rm -rf /var/lib/cloud/instance",
+        "systemctl enable cloud-init.service; systemctl enable cloud-init-local.service; systemctl enable cloud-config.service",
+        "systemctl restart cloud-init.service; systemctl restart cloud-init-local.service; systemctl restart cloud-config.service",
         "apt-get -y autoremove --purge",
         "apt-get -y clean",
         "rm -rf /tmp ; mkdir /tmp ; chmod 1777 /tmp"
