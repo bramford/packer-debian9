@@ -94,7 +94,6 @@
         "apt-get -y purge python-dev python-pip libffi-dev libssl-dev libxml2-dev libxslt1-dev zlib1g-dev",
         "rm -rf /var/lib/cloud/instance",
         "systemctl enable cloud-init.service; systemctl enable cloud-init-local.service; systemctl enable cloud-config.service",
-        "systemctl restart cloud-init.service; systemctl restart cloud-init-local.service; systemctl restart cloud-config.service",
         "localedef -i en_US -f UTF-8 en_US.UTF-8",
         "apt-get -y autoremove --purge",
         "apt-get -y clean",
