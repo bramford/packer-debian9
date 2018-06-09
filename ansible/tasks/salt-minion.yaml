@@ -20,7 +20,7 @@
     enabled: yes
 
 - name: set dynamic minion_id
-- replace:
+  replace:
     path: /etc/salt/minion
     regexp: '^(.*)minion_id_caching(.*)'
     replace: 'minion_id_caching: False'
