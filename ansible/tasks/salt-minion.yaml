@@ -10,12 +10,9 @@
     filename: salt-stack
 
 - name: Install Latest Salt-Minion
-  apt:
-    name: salt-minion
-    state: latest
-    update_cache: yes
-    environment:
-      RUNLEVLEL: 1
+  apt: name=salt-minion state=latest update_cache=yes
+  environment:
+    RUNLEVLEL: 1
 
 - name: Enable Salt-minion on next boot
   service:
