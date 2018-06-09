@@ -30,12 +30,10 @@
         - smartmontools
         - systemd
         - tcpdump
+        - vim
         - wget
 
     - include_tasks: tasks/disable-persistent-network-names.yml
-      when: not ec2ami|bool
-
-    - include_tasks: tasks/default-editor-vim-nox.yml
       when: not ec2ami|bool
 
     - include_tasks: tasks/salt-minion.yaml
