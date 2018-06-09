@@ -1,0 +1,23 @@
+---
+- name: Add an SALT Apt signing key
+  apt_key:
+    url: https://repo.saltstack.com/apt/debian/9/amd64/latest/SALTSTACK-GPG-KEY.pub
+    state: present
+
+- apt_repository:
+    repo: deb http://repo.saltstack.com/apt/debian/9/amd64/latest stretch main
+    state: present
+    filename: salt-stack
+
+- name: Install Latest Salt-Minion
+  apt:
+    name: salt-minion
+    state: latest
+    update_cache: yes
+    environment:
+      RUNLEVLEL: 1
+
+- name: Enable Salt-minion on next boot
+  service:
+    name: salt-minion
+    enabled: yes

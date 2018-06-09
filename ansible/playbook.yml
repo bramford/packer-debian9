@@ -37,3 +37,6 @@
 
     - include_tasks: tasks/default-editor-vim-nox.yml
       when: not ec2ami|bool
+
+    - include_tasks: tasks/salt-minion.yaml
+      when: not ec2ami|bool
