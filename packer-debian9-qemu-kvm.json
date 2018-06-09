@@ -2,16 +2,14 @@
   "variables": {
     "ansible_roles_path": "./ansible/roles",
     "build_id": "{{isotime \"20060102150405\"}}",
-    "build_ref": "{{env `BUILD_REF`}}",
     "build_name": "packer-debian9-qemu-kvm",
-    "disk_size": "10240",
+    "disk_size": "8240",
     "iso_checksum": "345c4e674dc10476e8c4f1571fbcdba4ce9788aa5584c5e2590ab3e89e7bb9acb370536f41a3ac740eb92b6aebe3cb8eb9734874dd1658c68875981b8351bc38",
     "iso_checksum_type": "sha512",
     "iso_name": "debian-9.4.0-amd64-netinst.iso",
-    "local_domain": "lan.mydomain.com",
-    "local_mirror_url": "http://localhost",
+    "local_domain": "local.lan",
     "output_dir": "output",
-    "dynamic_mirror_url": "http://debian-cd.debian.net/debian-cd/9.4.0/amd64/iso-cd",
+    "dynamic_mirror_url": "./iso",
     "remote_mirror_url": "https://cdimage.debian.org/debian-cd/9.4.0/amd64/iso-cd"
   },
 
@@ -37,13 +35,15 @@
       ],
       "boot_wait": "5s",
       "disk_size": "{{ user `disk_size` }}",
-      "format": "qcow2",
+      "format": "raw",
       "headless": true,
       "http_directory": "http",
       "iso_checksum": "{{ user `iso_checksum` }}",
       "iso_checksum_type": "{{ user `iso_checksum_type` }}",
+      "disk_interface": "virtio-scsi",
+      "vnc_bind_address": "0.0.0.0",
+      "disk_cache": "none",
       "iso_urls": [
-        "{{ user `local_mirror_url` }}/{{ user `iso_name` }}",
         "{{ user `dynamic_mirror_url` }}/{{ user `iso_name` }}",
         "{{ user `remote_mirror_url` }}/{{ user `iso_name` }}"
       ],
@@ -57,7 +57,7 @@
       "ssh_username": "root",
       "ssh_wait_timeout": "1800s",
       "type": "qemu",
-      "vm_name": "{{ user `build_name` }}-{{ user `build_ref` }}-{{ user `build_id` }}"
+      "vm_name": "{{ user `build_name` }}-{{ user `build_id` }}"
     }
   ],
 
@@ -69,7 +69,7 @@
         "sleep 15",
         "DEBIAN_FRONTEND=noninteractive apt-get -y update",
         "DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" dist-upgrade",
-        "DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" install build-essential python-dev libffi-dev libssl-dev libxml2-dev libxslt1-dev zlib1g-dev",
+        "DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" install build-essential qemu-guest-agent python-dev libffi-dev cloud-init cloud-utils libssl-dev libxml2-dev libxslt1-dev zlib1g-dev",
         "DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" --purge remove python-cffi",
         "wget https://bootstrap.pypa.io/get-pip.py -O /usr/local/bin/get-pip.py",
         "chmod +x /usr/local/bin/get-pip.py",
@@ -92,6 +92,9 @@
       "inline": [
         "pip uninstall -y ansible httplib2 Jinja2 paramiko PyYAML six",
         "apt-get -y purge python-dev python-pip libffi-dev libssl-dev libxml2-dev libxslt1-dev zlib1g-dev",
+        "rm -rf /var/lib/cloud/instance",
+        "systemctl enable cloud-init.service; systemctl enable cloud-init-local.service; systemctl enable cloud-config.service",
+        "localedef -i en_US -f UTF-8 en_US.UTF-8",
         "apt-get -y autoremove --purge",
         "apt-get -y clean",
         "rm -rf /tmp ; mkdir /tmp ; chmod 1777 /tmp"

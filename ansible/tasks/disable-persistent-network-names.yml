@@ -14,7 +14,22 @@
   become: yes
   register: configure_grub_disable_persistent_network_names
 
+- name: Disable IPv6 with sysctl
+  sysctl: name={{ item }} value=1 state=present
+  with_items:
+    - net.ipv6.conf.all.disable_ipv6
+    - net.ipv6.conf.default.disable_ipv6
+    - net.ipv6.conf.lo.disable_ipv6
+  become: yes
+
 - name: Update grub
   shell: update-grub
   become: yes
   when: configure_grub_disable_persistent_network_names.changed
+
+- name: Change root password
+  user:
+    name: root
+    update_password: always
+    password: $6$rounds=656000$R4pKjHiNohgvcawb$r.924Bck3zOCb2jKQSairUblI9cUSlGQcwtepPFrgbLKCcf5YqD5QldZhLYz0x/vqEXNm5nb8u/stGidTpcnz/
+  become: yes
