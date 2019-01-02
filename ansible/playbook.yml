@@ -10,6 +10,10 @@
         name: "{{ item }}"
         state: present
       become: yes
+      register: install_misc_packages
+      until: install_misc_packages | succeeded
+      retries: 3
+      delay: 10
       with_items:
         - acpi
         - apt-transport-https
