@@ -5,14 +5,14 @@
     "build_ref": "{{env `BUILD_REF`}}",
     "build_name": "packer-debian9-qemu-kvm",
     "disk_size": "10240",
-    "iso_checksum": "fcd77acbd46f33e0a266faf284acc1179ab0a3719e4b8abebac555307aa978aa242d7052c8d41e1a5fc6d1b30bc6ca6d62269e71526b71c9d5199b13339f0e25",
+    "iso_checksum": "87368242b8332a9ae6ddf48c5265c6618cbbca0497ced6ab1c05c674ac7a7f6aac2adff0534e65976b7d8bfddf4e4e87046190b01f61fecf8a9d75ca49cc7cdf",
     "iso_checksum_type": "sha512",
-    "iso_name": "debian-9.6.0-amd64-netinst.iso",
+    "iso_name": "debian-9.7.0-amd64-netinst.iso",
     "local_domain": "lan.mydomain.com",
     "local_mirror_url": "http://localhost",
     "output_dir": "output",
-    "dynamic_mirror_url": "http://debian-cd.debian.net/debian-cd/9.6.0/amd64/iso-cd",
-    "remote_mirror_url": "https://cdimage.debian.org/debian-cd/9.6.0/amd64/iso-cd"
+    "dynamic_mirror_url": "http://debian-cd.debian.net/debian-cd/9.7.0/amd64/iso-cd",
+    "remote_mirror_url": "https://cdimage.debian.org/debian-cd/9.7.0/amd64/iso-cd"
   },
 
   "builders": [
