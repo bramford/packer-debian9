@@ -1,8 +1,13 @@
 Packer Templates: Debian 9 (stretch)
 ===================================
 
+**Notice:**
+_This repository is no longer maintained as Debian 9 is oldstable and I have no intention of creating packer-debian10._
+
+I recommend using the [Official Cloud Images for Openstack](https://cdimage.debian.org/cdimage/openstack/) with [cloud-init](https://cloudinit.readthedocs.io/en/latest/)
+
 [![Build Status](https://travis-ci.org/bramford/packer-debian9.svg?branch=master)](https://travis-ci.org/bramford/packer-debian9)
- 
+
 Fully automated installation of Debian 9
 
 ## Supported Platforms
@@ -11,7 +16,7 @@ Fully automated installation of Debian 9
 * QEMU-KVM (qcow2)
 
 ## Dependencies
- 
+
  - Packer [1.0.3+](https://releases.hashicorp.com/packer/)
 
 ## EC2 AMI
@@ -72,5 +77,5 @@ Run `./build.sh --help` for further usage instructions
     ./build.sh qemu-kvm
 
 ##### Output
- 
+
 Output directory defaults to `./output/`, configurable with `-var 'output_dir=/path/to/dir'`
